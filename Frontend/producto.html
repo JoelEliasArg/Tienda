@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos - TiendaApp</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header><h1 style="color: #ffff;">Gestión de Productos</h1></header>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="cliente.html">Clientes</a>
+        <a href="proveedor.html">Proveedores</a>
+        <a href="compra.html">Compras</a>
+    </nav>
+
+    <main>
+        <h2 style="text-align: center;">Registrar Producto</h2>
+        <form id="formProducto">
+            <input type="text" placeholder="Nombre del producto" required>
+            <input type="number" placeholder="Precio" required>
+            <input type="number" placeholder="Stock" required>
+            <select required>
+                <option value="">Seleccionar proveedor</option>
+            </select>
+            <button type="submit">Guardar Producto</button>
+        </form>
+
+        <h2>Inventario</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Proveedor</th></tr>
+            </thead>
+            <tbody id="tablaProductos"></tbody>
+        </table>
+    </main>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/producto.css">
+
+</body>
+</html>

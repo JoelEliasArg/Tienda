@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Compras - TiendaApp</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header><h1  style="color: #ffff;">Registro de Compras</h1></header>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="cliente.html">Clientes</a>
+        <a href="producto.html">Productos</a>
+        <a href="proveedor.html">Proveedores</a>
+    </nav>
+
+    <main>
+        <h2 style="text-align: center;"  style="color: #ffff;">Registrar Compra</h2>
+        <form id="formCompra">
+            <select required>
+                <option value="">Seleccionar cliente</option>
+            </select>
+            <button type="submit">Registrar Compra</button>
+        </form>
+
+        <h2>Historial de Compras</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Cliente</th><th>Total</th><th>Fecha</th></tr>
+            </thead>
+            <tbody id="tablaCompras"></tbody>
+        </table>
+    </main>
+    <link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/compra.css">
+
+</body>
+</html>

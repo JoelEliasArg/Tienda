@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda</title>
+    <title>TiendaApp - Dashboard</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="icon" href="images/logo.png">
 </head>
 <body>
-    <h1>Estamos en la tienda</h1>
+    <header>
+        <img src="images/logo.png" alt="TiendaApp Logo" style="height: 250px;">
+    </header>
+
+    <nav>
+        <a href="cliente.html">Clientes</a>
+        <a href="producto.html">Productos</a>
+        <a href="proveedor.html">Proveedores</a>
+        <a href="compra.html">Compras</a>
+        <a href="reporte.html">Reportes</a>
+    </nav>
+
+    <main>
+      <section class="content-box">
+    <h1 style="text-align: center;">Panel de gestión</h1>
+  <p style="text-align: center;">Selecciona un módulo para comenzar.</p>
+
+  <div class="card-container">
+    <a href="cliente.html" class="card">
+      <h3>Clientes</h3>
+      <p>Registra y gestiona tus clientes fácilmente.</p>
+    </a>
+
+    <a href="producto.html" class="card">
+      <h3>Productos</h3>
+      <p>Administra los productos disponibles en la tienda.</p>
+    </a>
+
+    <a href="proveedor.html" class="card">
+      <h3>Proveedores</h3>
+      <p>Controla y edita la información de los proveedores.</p>
+    </a>
+  </div>
+</section>
+    </main>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/index.css">
+
 </body>
 </html>
+

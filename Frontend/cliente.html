@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes - TiendaApp</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header><h1 style="color: #ffff;">Gestión de Clientes</h1></header>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="producto.html">Productos</a>
+        <a href="proveedor.html">Proveedores</a>
+        <a href="compra.html">Compras</a>
+    </nav>
+
+    <main>
+        <h2 style="text-align: center;">Registrar Cliente</h2>
+        <form id="formCliente">
+            <input type="text" placeholder="Nombre completo" required>
+            <input type="email" placeholder="Correo electrónico" required>
+            <input type="text" placeholder="Teléfono">
+            <button type="submit">Guardar Cliente</button>
+        </form>
+
+        <h2>Lista de Clientes</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th></tr>
+            </thead>
+            <tbody id="tablaClientes"></tbody>
+        </table>
+    </main>
+</body>
+</html>

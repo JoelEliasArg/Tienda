@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes - TiendaApp</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header><h1  style="color: #ffff;">Reportes de Ventas</h1></header>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="cliente.html">Clientes</a>
+        <a href="producto.html">Productos</a>
+        <a href="compra.html">Compras</a>
+    </nav>
+
+    <main>
+        <h2>Ventas por Fecha</h2>
+        <form id="formReporteFecha">
+            <input type="date" required>
+            <input type="date" required>
+            <button type="submit">Generar</button>
+        </form>
+
+        <h2>Productos más vendidos</h2>
+        <table>
+            <thead>
+                <tr><th>Producto</th><th>Total Vendido</th></tr>
+            </thead>
+            <tbody id="tablaMasVendidos"></tbody>
+        </table>
+    </main>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/reporte.css">
+</body>
+</html>

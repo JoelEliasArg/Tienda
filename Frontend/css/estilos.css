@@ -1,0 +1,334 @@
+/* Importar la fuente Parkinsans desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@400;500;600;700&display=swap');
+
+/* Estilo general para toda la app */
+body {
+    font-family: 'Parkinsans', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #f7f5f5, #cecece); 
+    color: #1f2937;
+}
+/* Encabezado */
+/* 🔷 Fondo principal del encabezado con degradado */
+header {
+    background: linear-gradient(135deg, #0400e4, #170099);
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* 🔹 Navbar con degradado */
+nav, .navbar {
+    background: linear-gradient(135deg, #5cb8ff, #0044b3);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1rem;
+}
+
+/* 🔗 Enlaces del navbar sin subrayado */
+nav a,
+.navbar a {
+    color: white;
+    text-decoration: none;  /* ❌ elimina línea de texto */
+    margin: 0 1.2rem;
+    font-weight: 600;
+    transition: opacity 0.2s ease-in-out;
+}
+
+nav a:hover,
+.navbar a:hover {
+    opacity: 0.8;
+}
+
+/* Contenido principal */
+main {
+    padding: 2rem;
+    background: rgb(243, 243, 243);
+    margin: 2rem auto;
+    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3 {
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+    font-size: 1.7rem;
+}
+
+/* Botones */
+button {
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+    background-color: #2563eb;
+    transform: scale(1.03);
+}
+
+/* Campos de entrada */
+input, select {
+    padding: 8px;
+    margin: 5px 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+th {
+    background-color: #3b82f6;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+    main {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    nav {
+        flex-direction: column;
+    }
+}
+/* ✨ Animación Fade-In solo para elementos sobre el fondo */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Aplica fade-in a los elementos principales sobre el fondo */
+header, nav, main, form, table, section, div, footer {
+    animation: fadeIn 0.8s ease-out both;
+}
+
+/* Imágenes, botones e inputs también se suavizan */
+img, button, input, select {
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+/* Escalonado suave para los elementos dentro del main */
+main > * {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+main > *:nth-child(1) { animation-delay: 0.1s; }
+main > *:nth-child(2) { animation-delay: 0.2s; }
+main > *:nth-child(3) { animation-delay: 0.3s; }
+main > *:nth-child(4) { animation-delay: 0.4s; }
+main > *:nth-child(5) { animation-delay: 0.5s; }
+
+/* Fondo estático */
+body {
+    font-family: 'Parkinsans', sans-serif;
+    margin: 0;
+    background-color: #f4f6f8; /* Mantiene tu fondo */
+    color: #1f2937;
+    overflow-x: hidden;
+}
+/* ❌ Quita animación del fondo azul del encabezado */
+header, .header, .hero-bg {
+  animation: none !important;
+  opacity: 1 !important;
+}
+/* Quitar animación al fondo del navbar */
+nav, .navbar {
+  animation: none !important;
+  opacity: 1 !important;
+}
+/* 📦 Contenedor de las cards */
+.card-container {
+    display: flex;
+    justify-content: center; /* centra horizontalmente */
+    align-items: center;     /* centra verticalmente si hay altura fija */
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 3rem;
+    width: 100%;
+}
+
+/* 🧱 Card individual (clicable con efecto zoom) */
+.card {
+    width: 300px;
+    height: 200px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center; /* centra texto dentro */
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(19, 19, 19, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* ✨ Animación zoom al pasar el mouse */
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Títulos y textos dentro de las cards */
+.card h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #374151;
+    line-height: 1.4;
+}
+/* 🧾 Campos de entrada (input, select, textarea) */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-family: 'Parkinsans', sans-serif;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+/* ✨ Efecto de zoom in + línea azul al hacer clic */
+input:focus,
+select:focus,
+textarea:focus {
+    transform: scale(1.03);
+    border-color: #2563eb; /* Azul más brillante */
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+}
+
+/* 🔘 Botones principales */
+button,
+input[type="submit"],
+.btn {
+    font-family: 'Parkinsans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    padding: 0.8rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    background: linear-gradient(135deg, #3b82f6, #1e40af); /* degradado azul claro → azul oscuro */
+}
+
+/* 💥 Efecto hover para los botones */
+button:hover,
+input[type="submit"]:hover,
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+}
+
+/* 🚀 Efecto click */
+button:active,
+input[type="submit"]:active,
+.btn:active {
+    transform: scale(0.97);
+}
+/* === Formularios centrados dentro del contenedor === */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Campos de entrada con ancho fijo y centrados */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 80%; /* reduce el ancho y los centra */
+  max-width: 500px;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+  outline: none;
+  display: block;
+  margin: 0 auto; /* centra horizontalmente */
+}
+
+/* Efecto focus */
+input:focus,
+select:focus,
+textarea:focus {
+  transform: scale(1.03);
+  border-color: #2563eb;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+}
+
+/* Botones centrados */
+button,
+input[type="submit"],
+.btn {
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin-top: 1rem;
+}
