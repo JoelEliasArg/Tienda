@@ -22,24 +22,22 @@ app.use(express.json());
 
 // 🧍 CLIENTES
 app.post('/clientes', clienteControlador.crearCliente);
-app.get('/clientes', clienteControlador.obtenerClientes);
 app.get('/clientes/:id', clienteControlador.obtenerClientePorId);
 app.put('/clientes/:id', clienteControlador.actualizarCliente);
-app.delete('/clientes/:id', clienteControlador.eliminarCliente);
+app.get('/clientes', clienteControlador.listarClientes);
 
 // 📦 PRODUCTOS
 app.post('/productos', productoControlador.crearProducto);
 app.get('/productos', productoControlador.obtenerProductos);
 app.get('/productos/:id', productoControlador.obtenerProductoPorId);
 app.put('/productos/:id', productoControlador.actualizarProducto);
-app.delete('/productos/:id', productoControlador.eliminarProducto);
 
 // 🏭 PROVEEDORES
 app.post('/proveedores', proveedorControlador.crearProveedor);
 app.get('/proveedores', proveedorControlador.obtenerProveedores);
 app.get('/proveedores/:id', proveedorControlador.obtenerProveedorPorId);
 app.put('/proveedores/:id', proveedorControlador.actualizarProveedor);
-app.delete('/proveedores/:id', proveedorControlador.eliminarProveedor);
+
 
 // 🧾 COMPRAS
 app.post('/compras', compraControlador.crearCompra);

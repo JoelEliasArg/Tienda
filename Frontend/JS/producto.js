@@ -1,6 +1,6 @@
 // producto.js
 // Rutas de API
-const API_PRODUCTO = 'http://localhost:3000/productos'; // Corregido: 'producto' -> 'productos'
+const API_PRODUCTO = 'http://localhost:3000/productos'; 
 const API_PROVEEDOR = 'http://localhost:3000/proveedores';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarProveedores() {
     const select = document.getElementById('proveedorId');
-    select.innerHTML = '<option value="">Cargando proveedores...</option>'; // Mensaje de carga
+    select.innerHTML = '<option value="">Cargando proveedores...</option>';
 
     try {
-        const res = await fetch(API_PROVEEDOR);
+        // NOTA: Se asume que esta ruta también trae solo proveedores activos si es necesario.
+        const res = await fetch(API_PROVEEDOR); 
         if (!res.ok) throw new Error('Error al cargar proveedores.');
 
         const proveedores = await res.json();
@@ -39,27 +40,27 @@ async function cargarProveedores() {
     }
 }
 
-// --- 2. Listar Productos (Incluye información del Proveedor) ---
+// --- 2. Listar Productos (Filtrando solo Activos) ---
 
 async function listarProductos() {
     try {
         const tabla = document.getElementById('tablaProductos');
         tabla.innerHTML = '<tr><td colspan="7">Cargando inventario...</td></tr>';
         
-        // El controlador de productos incluye el objeto Proveedor
-        const res = await fetch(API_PRODUCTO); 
-        if (!res.ok) throw new Error('Error al listar productos.');
+        // 🔑 CLAVE: Fetch de datos, solicitando solo los activos (activo=1)
+        const res = await fetch(`${API_PRODUCTO}?activo=1`); 
+        if (!res.ok) throw new Error('Error al listar productos activos.');
 
         const productos = await res.json();
         tabla.innerHTML = ''; // Limpiar después de cargar
 
         if (productos.length === 0) {
-            tabla.innerHTML = '<tr><td colspan="7">No hay productos en el inventario.</td></tr>';
+            tabla.innerHTML = '<tr><td colspan="7">No hay productos activos en el inventario.</td></tr>';
             return;
         }
 
         productos.forEach(prod => {
-            // Accedemos a la propiedad anidada: prod.Proveedor.nombre
+            // Accedemos a la propiedad anidada: prod.Proveedor.nombre (asumiendo include en el backend)
             const nombreProveedor = prod.Proveedor ? prod.Proveedor.nombre : 'Sin Proveedor';
 
             const fila = `
@@ -71,8 +72,8 @@ async function listarProductos() {
                     <td>${prod.stock}</td>
                     <td>${nombreProveedor}</td>
                     <td>
-                        <button onclick="alert('Editar Producto ${prod.id}')">✏️</button>
-                        <button onclick="alert('Eliminar Producto ${prod.id}')">🗑️</button>
+                        <button onclick="editarProducto(${prod.id}, '${prod.nombre.replace(/'/g, "\\'")}', ${prod.precio}, ${prod.stock}, ${prod.proveedorId})">✏️ Editar</button>
+                        <button onclick="eliminarProducto(${prod.id})">🗑️ Desactivar</button> 
                     </td>
                 </tr>`;
             tabla.innerHTML += fila;
@@ -101,7 +102,7 @@ async function registrarProducto(e) {
 
     // Validaciones extra para números
     if (isNaN(nuevoProducto.precio) || isNaN(nuevoProducto.stock)) {
-         return alert("El precio y el stock deben ser números válidos.");
+          return alert("El precio y el stock deben ser números válidos.");
     }
     
     // Si la descripción está vacía, no la enviamos
@@ -127,5 +128,91 @@ async function registrarProducto(e) {
     } catch (error) {
         console.error('Error al registrar producto:', error);
         alert('❌ Error: ' + error.message);
+    }
+}
+
+// --- 4. Funcionalidad de Eliminación (Soft Delete: PUT activo = 0) ---
+
+async function eliminarProducto(id) {
+    if (!confirm(`⚠️ ¿Está seguro que desea DESACTIVAR el Producto con ID ${id}? Será ocultado del inventario.`)) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_PRODUCTO}/${id}`, {
+            method: 'PUT', // 🔑 CLAVE: Usamos PUT para el Soft Delete
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ activo: 0 }) // 🔑 CLAVE: Enviamos el campo activo a 0
+        });
+
+        if (res.ok) {
+            alert('🗑️ Producto DESACTIVADO con éxito.');
+            listarProductos(); // Refrescar la tabla
+        } else {
+            const data = await res.json();
+            throw new Error(data.error || 'No se pudo desactivar el producto.');
+        }
+    } catch (error) {
+        console.error('Error al desactivar producto:', error);
+        alert('❌ Error al desactivar: ' + error.message);
+    }
+}
+
+
+// --- 5. Funcionalidad de Edición (Función Placeholder) ---
+
+async function editarProducto(id, nombreActual, precioActual, stockActual, proveedorIdActual) {
+    
+    // 1. Recolección de nuevos datos
+    const nuevoNombre = prompt(`Editando Producto ID ${id}.\nIngrese el nuevo nombre:`, nombreActual);
+    if (nuevoNombre === null || nuevoNombre.trim() === '') return;
+
+    // Nota: Para Precio y Stock usamos prompt y luego validamos el número.
+    const nuevoPrecioStr = prompt(`Ingrese el nuevo precio:`, precioActual);
+    if (nuevoPrecioStr === null) return;
+    const nuevoPrecio = parseFloat(nuevoPrecioStr);
+
+    const nuevoStockStr = prompt(`Ingrese el nuevo stock:`, stockActual);
+    if (nuevoStockStr === null) return;
+    const nuevoStock = parseInt(nuevoStockStr);
+
+    // Simplificación: Asumimos que no vamos a cambiar el proveedorId en esta versión rápida. 
+    // Si quieres cambiar el proveedor, necesitarías un selector más complejo que prompt.
+    const nuevoProveedorId = proveedorIdActual; 
+
+    // 2. Validación de datos numéricos
+    if (isNaN(nuevoPrecio) || nuevoPrecio < 0) {
+        return alert("El precio ingresado no es un número válido o es negativo.");
+    }
+    if (isNaN(nuevoStock) || nuevoStock < 0) {
+        return alert("El stock ingresado no es un número válido o es negativo.");
+    }
+
+    // 3. Construir el objeto de actualización
+    const productoActualizado = {
+        nombre: nuevoNombre.trim(),
+        precio: nuevoPrecio,
+        stock: nuevoStock,
+        proveedorId: nuevoProveedorId // Se mantiene el proveedor actual
+        // Si tienes campo 'descripcion' en el formulario, agrégalo aquí también.
+    };
+
+    try {
+        const res = await fetch(`${API_PRODUCTO}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productoActualizado)
+        });
+
+        if (res.ok) {
+            alert('✅ Producto actualizado con éxito.');
+            listarProductos(); // Refrescar la tabla para ver los cambios
+        } else {
+            const data = await res.json();
+            throw new Error(data.error || 'No se pudo actualizar el producto.');
+        }
+    } catch (error) {
+        console.error('Error al editar producto:', error);
+        alert('❌ Error al actualizar: ' + error.message);
     }
 }
