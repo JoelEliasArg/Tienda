@@ -331,33 +331,4 @@ input[type="submit"],
   background: linear-gradient(135deg, #3b82f6, #1e40af);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   margin-top: 1rem;
-}
-/* 🔹 Botones Login y Register (parte superior derecha) */
-.auth-buttons {
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  display: flex;
-  gap: 12px;
-  z-index: 10;
-}
-
-.btn-login,
-.btn-register {
-  padding: 8px 18px;
-  border-radius: 12px;
-  border: none;
-  color: white;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  background: linear-gradient(90deg, #60a5fa, #2563eb);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  font-family: "Parkinsans", sans-serif;
-}
-
-.btn-login:hover,
-.btn-register:hover {
-  transform: scale(1.07);
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
-}
+};
