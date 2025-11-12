@@ -1,38 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Proveedores - TiendaApp</title>
-    <link rel="stylesheet" href="css/estilos.css">
+  <meta charset="UTF-8">
+  <title>Proveedores - TiendaApp</title>
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-    <header><h1  style="color: #ffff;">Gestión de Proveedores</h1></header>
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="index.html">Inicio</a>
-        <a href="cliente.html">Clientes</a>
-        <a href="producto.html">Productos</a>
-        <a href="compra.html">Compras</a>
-    </nav>
+  <header><h1 style="color: #ffff;">Gestión de Proveedores</h1></header>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="index.html">Inicio</a>
+    <a href="cliente.html">Clientes</a>
+    <a href="producto.html">Productos</a>
+    <a href="compra.html">Compras</a>
+  </nav>
 
-    <main>
-        <h2 style="text-align: center;"  style="color: #ffff;">Registrar Proveedor</h2>
-        <form id="formProveedor">
-            <input type="text" placeholder="Nombre de la empresa" required>
-            <input type="text" placeholder="Contacto">
-            <input type="text" placeholder="Teléfono">
-            <button type="submit">Guardar Proveedor</button>
-        </form>
+  <main>
+    <h2 style="text-align: center;">Registrar Proveedor</h2>
+    <form id="formProveedor">
+            <input type="text" id="nombre" placeholder="Nombre de la empresa" required>
+      <input type="text" id="contacto" placeholder="Nombre del Contacto">
+      <input type="text" id="telefono" placeholder="Teléfono">
+            <input type="email" id="email" placeholder="Correo electrónico"> <input type="text" id="direccion" placeholder="Dirección">       <button type="submit">Guardar Proveedor</button>
+    </form>
 
-        <h2>Lista de Proveedores</h2>
-        <table>
-            <thead>
-                <tr><th>ID</th><th>Nombre</th><th>Contacto</th><th>Teléfono</th></tr>
-            </thead>
-            <tbody id="tablaProveedores"></tbody>
-        </table>
-    </main>
-    <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/proveedor.css">
+    <h2>Lista de Proveedores</h2>
+        <button id="btnListarProveedores" style="margin-bottom: 10px;">
+            Mostrar Lista de Proveedores
+        </button>
+    <table>
+      <thead>
+        <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+      </thead>
+      <tbody id="tablaProveedores"></tbody>
+    </table>
+  </main>
+  <script src="js/proveedor.js"></script>
 </body>
 </html>

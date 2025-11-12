@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Clientes - TiendaApp</title>
     <link rel="stylesheet" href="css/estilos.css">
 </head>
+
 <body>
-    <header><h1 style="color: #ffff;">Gestión de Clientes</h1></header>
+    <header>
+        <h1 style="color: #ffff;">Gestión de Clientes</h1>
+    </header>
     <nav>
         <a href="dashboard.html">Dashboard</a>
         <a href="index.html">Inicio</a>
@@ -18,19 +22,33 @@
     <main>
         <h2 style="text-align: center;">Registrar Cliente</h2>
         <form id="formCliente">
-            <input type="text" placeholder="Nombre completo" required>
-            <input type="email" placeholder="Correo electrónico" required>
-            <input type="text" placeholder="Teléfono">
-            <button type="submit">Guardar Cliente</button>
+            <input type="text" id="nombre" placeholder="Nombre completo" required>
+            <input type="email" id="email" placeholder="Correo electrónico" required>
+            <input type="text" id="telefono" placeholder="Teléfono">
+            <input type="text" id="direccion" placeholder="Dirección"> <button type="submit">Guardar Cliente</button>
         </form>
 
         <h2>Lista de Clientes</h2>
+        <button id="btnListarClientes" style="margin-bottom: 10px;">
+            Mostrar Lista de Clientes
+        </button>
+
         <table>
             <thead>
-                <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th></tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
             </thead>
-            <tbody id="tablaClientes"></tbody>
+            <tbody id="tablaClientes">
+            </tbody>
         </table>
     </main>
+    <script src="js/cliente.js"></script>
 </body>
+
 </html>

@@ -55,7 +55,6 @@ app.delete('/compra-productos/:id', compraProductoControlador.eliminarDetalle);
 
 // 📊 REPORTES
 app.get('/reportes/ventas', reporteControlador.ventasPorFecha);
-app.get('/reportes/productos-mas-vendidos', reporteControlador.productosMasVendidos);
 app.get('/reportes/proveedores', reporteControlador.proveedoresConMasProductos);
 
 // --- 5. Archivos estáticos (Frontend) ---

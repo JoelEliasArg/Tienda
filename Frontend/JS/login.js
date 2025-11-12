@@ -1,35 +1,53 @@
 // login.js
 document.addEventListener("DOMContentLoaded", () => {
-  const formLogin = document.getElementById("form-login");
+  const formLogin = document.getElementById("loginForm");
 
   formLogin.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const correo = document.getElementById("correo").value.trim();
-    const clave = document.getElementById("clave").value.trim();
+    const nombre = document.getElementById("nombre").value.trim();
+    const email = document.getElementById("email").value.trim();
 
-    if (!correo || !clave) {
-      alert("Por favor, llena todos los campos.");
+    if (!nombre || !email) {
+      alert("Por favor, completa ambos campos.");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:3000/usuario/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo, clave }),
-      });
+      // 1️⃣ Buscar cliente existente
+      const resGet = await fetch(`http://localhost:3000/clientes`);
+      const clientes = await resGet.json();
+      const clienteExistente = clientes.find(c => c.email === email);
 
-      const data = await response.json();
+      let cliente;
 
-      if (!response.ok) throw new Error(data.mensaje || "Error al iniciar sesión");
+      if (clienteExistente) {
+        // 2️⃣ Si existe, usarlo
+        cliente = clienteExistente;
+        console.log("Cliente encontrado:", cliente);
+      } else {
+        // 3️⃣ Si no existe, crearlo
+        const resPost = await fetch("http://localhost:3000/clientes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, email })
+        });
 
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
-      alert("✅ Bienvenido, " + data.usuario.nombre);
-      window.location.href = "dashboard.html";
+        if (!resPost.ok) throw new Error("Error al crear cliente");
+
+        cliente = await resPost.json();
+        console.log("Cliente creado:", cliente);
+      }
+
+      // 4️⃣ Guardar en localStorage
+      localStorage.setItem("cliente", JSON.stringify(cliente));
+
+      alert(`✅ Bienvenido, ${cliente.nombre}`);
+      window.location.href = "dashboard.html"; // redirige a tu página principal
 
     } catch (error) {
-      alert("❌ " + error.message);
+      console.error("Error:", error);
+      alert("❌ Ocurrió un error al iniciar sesión: " + error.message);
     }
   });
 });

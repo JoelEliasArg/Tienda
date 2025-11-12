@@ -1,42 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Productos - TiendaApp</title>
-    <link rel="stylesheet" href="css/estilos.css">
+  <meta charset="UTF-8">
+  <title>Productos - TiendaApp</title>
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-    <header><h1 style="color: #ffff;">Gestión de Productos</h1></header>
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="index.html">Inicio</a>
-        <a href="cliente.html">Clientes</a>
-        <a href="proveedor.html">Proveedores</a>
-        <a href="compra.html">Compras</a>
-    </nav>
+  <header><h1 style="color: #ffff;">Gestión de Productos</h1></header>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="index.html">Inicio</a>
+    <a href="cliente.html">Clientes</a>
+    <a href="proveedor.html">Proveedores</a>
+    <a href="compra.html">Compras</a>
+  </nav>
 
-    <main>
-        <h2 style="text-align: center;">Registrar Producto</h2>
-        <form id="formProducto">
-            <input type="text" placeholder="Nombre del producto" required>
-            <input type="number" placeholder="Precio" required>
-            <input type="number" placeholder="Stock" required>
-            <select required>
-                <option value="">Seleccionar proveedor</option>
-            </select>
-            <button type="submit">Guardar Producto</button>
-        </form>
+  <main>
+    <h2 style="text-align: center;">Registrar Producto</h2>
+    <form id="formProducto">
+            <input type="text" id="nombre" placeholder="Nombre del producto" required>
+      <textarea id="descripcion" placeholder="Descripción (Opcional)"></textarea>       <input type="number" id="precio" placeholder="Precio" required min="0" step="0.01">
+      <input type="number" id="stock" placeholder="Stock" required min="0">
+      <select id="proveedorId" required>         <option value="">Cargando proveedores...</option>
+      </select>
+      <button type="submit">Guardar Producto</button>
+    </form>
 
-        <h2>Inventario</h2>
-        <table>
-            <thead>
-                <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Proveedor</th></tr>
-            </thead>
-            <tbody id="tablaProductos"></tbody>
-        </table>
-    </main>
-    <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/producto.css">
+    <h2>Inventario</h2>
+        <button id="btnListarProductos" style="margin-bottom: 10px;">
+            Mostrar Inventario
+        </button>
 
+    <table>
+      <thead>
+        <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Proveedor</th>
+                    <th>Acciones</th>
+                </tr>
+      </thead>
+      <tbody id="tablaProductos"></tbody>
+    </table>
+  </main>
+  <script src="js/producto.js"></script>
 </body>
 </html>

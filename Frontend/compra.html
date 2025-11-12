@@ -1,39 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Compras - TiendaApp</title>
-    <link rel="stylesheet" href="css/estilos.css">
+  <meta charset="UTF-8">
+  <title>Compras - TiendaApp</title>
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-    <header><h1  style="color: #ffff;">Registro de Compras</h1></header>
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="index.html">Inicio</a>
-        <a href="cliente.html">Clientes</a>
-        <a href="producto.html">Productos</a>
-        <a href="proveedor.html">Proveedores</a>
-    </nav>
+  <header><h1 style="color: #ffff;">Registro de Compras (Ventas)</h1></header>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="index.html">Inicio</a>
+    <a href="cliente.html">Clientes</a>
+    <a href="producto.html">Productos</a>
+    <a href="proveedor.html">Proveedores</a>
+  </nav>
 
-    <main>
-        <h2 style="text-align: center;"  style="color: #ffff;">Registrar Compra</h2>
-        <form id="formCompra">
-            <select required>
-                <option value="">Seleccionar cliente</option>
-            </select>
-            <button type="submit">Registrar Compra</button>
+  <main>
+    <h2 style="text-align: center;">Registrar Venta</h2>
+        
+            <form id="formSeleccionCliente">
+            <label for="clienteId">Cliente:</label>
+      <select id="clienteId" required>
+        <option value="">Cargando clientes...</option>
+      </select>
+    </form>
+        
+        <hr>
+
+        <h3>Añadir Productos</h3>
+        <form id="formAnadirProducto" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <select id="productoSeleccionado" required style="flex-grow: 2;">
+        <option value="">Cargando productos...</option>
+      </select>
+            <input type="number" id="cantidad" placeholder="Cantidad" required min="1" value="1" style="width: 100px;">
+      <button type="submit">Añadir al Carrito</button>
         </form>
 
-        <h2>Historial de Compras</h2>
-        <table>
+        <hr>
+        
+        <h3>Detalle de la Compra</h3>
+        <table style="width: 100%; margin-bottom: 20px;">
             <thead>
-                <tr><th>ID</th><th>Cliente</th><th>Total</th><th>Fecha</th></tr>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio Unitario</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Acción</th>
+                </tr>
             </thead>
-            <tbody id="tablaCompras"></tbody>
+            <tbody id="tablaCarrito">
+                <tr><td colspan="5">El carrito está vacío.</td></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right; font-weight: bold;">TOTAL:</td>
+                    <td id="totalCompra" style="font-weight: bold;">$0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
         </table>
-    </main>
-    <link rel="stylesheet" href="css/estilos.css">
-<link rel="stylesheet" href="css/compra.css">
 
+            <form id="formCompra">
+                  <button type="submit" id="btnRegistrarCompra" disabled>
+                Registrar Compra ($0.00)
+            </button>
+    </form>
+        
+        <hr>
+
+    <h2>Historial de Compras</h2>
+        <button id="btnListarCompras" style="margin-bottom: 10px;">
+            Mostrar Historial de Compras
+        </button>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Cliente</th><th>Total</th><th>Fecha</th><th>Detalle</th></tr>
+      </thead>
+      <tbody id="tablaComprasHistorial"></tbody>     </table>
+  </main>
+  <script src="js/compra.js"></script>
 </body>
 </html>

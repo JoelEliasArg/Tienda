@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Reportes - TiendaApp</title>
-    <link rel="stylesheet" href="css/estilos.css">
+  <meta charset="UTF-8">
+  <title>Reportes - TiendaApp</title>
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-    <header><h1  style="color: #ffff;">Reportes de Ventas</h1></header>
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="index.html">Inicio</a>
-        <a href="cliente.html">Clientes</a>
-        <a href="producto.html">Productos</a>
-        <a href="compra.html">Compras</a>
-    </nav>
+  <header><h1 style="color: #ffff;">Reportes y Análisis</h1></header>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="index.html">Inicio</a>
+    <a href="cliente.html">Clientes</a>
+    <a href="producto.html">Productos</a>
+    <a href="compra.html">Compras</a>
+  </nav>
 
-    <main>
-        <h2>Ventas por Fecha</h2>
-        <form id="formReporteFecha">
-            <input type="date" required>
-            <input type="date" required>
-            <button type="submit">Generar</button>
-        </form>
+  <main>
+        <h2>Ventas por Rango de Fecha</h2>
+    <form id="formReporteVentasFecha">
+      <label for="fechaInicio">Desde:</label>
+      <input type="date" id="fechaInicio" required>
+      <label for="fechaFin">Hasta:</label>
+      <input type="date" id="fechaFin" required>
+      <button type="submit">Generar Reporte</button>
+    </form>
+        <div id="resultadoVentasFecha" style="margin-top: 15px;">
+            <p>Selecciona un rango de fechas y haz clic en "Generar Reporte".</p>
+        </div>
 
-        <h2>Productos más vendidos</h2>
-        <table>
-            <thead>
-                <tr><th>Producto</th><th>Total Vendido</th></tr>
-            </thead>
-            <tbody id="tablaMasVendidos"></tbody>
-        </table>
-    </main>
-    <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/reporte.css">
+    <hr>
+
+        <h2>Proveedores con Mayor Inventario</h2>
+        <button id="btnProveedoresInventario" style="margin-bottom: 10px;">Cargar Reporte de Inventario</button>
+    <table>
+      <thead>
+        <tr><th>Proveedor</th><th># Productos Registrados</th></tr>
+      </thead>
+      <tbody id="tablaProveedoresProductos">
+                <tr><td colspan="2">Haz clic en el botón para cargar el inventario por proveedor.</td></tr>
+            </tbody>
+    </table>
+  </main>
+  <script src="js/reporte.js"></script>
 </body>
 </html>
