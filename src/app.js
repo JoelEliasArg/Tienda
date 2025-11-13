@@ -43,6 +43,7 @@ app.put('/proveedores/:id', proveedorControlador.actualizarProveedor);
 app.post('/compras', compraControlador.crearCompra);
 app.get('/compras', compraControlador.obtenerCompras);
 app.get('/compras/:id', compraControlador.obtenerCompraPorId);
+app.get('/compras/:id', compraControlador.obtenerDetalleCompra);
 
 // 🛒 DETALLES DE COMPRA (CompraProducto)
 app.post('/compra-productos', compraProductoControlador.crearDetalle);

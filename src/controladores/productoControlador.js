@@ -18,22 +18,20 @@ module.exports = {
             const filtro = {};
             
             // 1. Lógica del Filtro Activo
-            // Filtra por activo=0 si se solicita explícitamente, si no, usa activo=1 por defecto.
             if (req.query.activo === '0') {
                 filtro.activo = 0; 
             } else {
-                filtro.activo = 1; // Por defecto: solo activos (1)
+                filtro.activo = 1; // CLAVE: Filtra solo productos activos (1)
             }
 
-            // 2. Ejecutar la consulta con filtro, ordenamiento e inclusión de Proveedor
             const productos = await Producto.findAll({
                 where: filtro, 
-                order: [['nombre', 'ASC']], // Ordena alfabéticamente por nombre
-                // Incluye el modelo Proveedor para que el frontend pueda mostrar el nombre
+                order: [['nombre', 'ASC']], 
+                // 2. Incluir el Proveedor (aunque no se use en index.js, es vital para otros módulos)
                 include: [{ model: Proveedor, attributes: ['nombre'] }] 
             });
 
-            res.json(productos);
+            res.json(productos); // Devuelve el array de productos
         } catch (error) {
             console.error('Error al listar productos:', error);
             res.status(500).json({ error: 'Error interno al listar productos.' });

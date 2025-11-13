@@ -26,7 +26,8 @@ async function cargarDatosIniciales() {
         
         selectCliente.innerHTML = '<option value="">-- Seleccionar cliente --</option>';
         clientes.forEach(c => {
-            selectCliente.innerHTML += `<option value="${c.id}">${c.nombre} (${c.email})</option>`;
+            // Asumiendo que el cliente tiene un campo 'email'
+            selectCliente.innerHTML += `<option value="${c.id}">${c.nombre} (${c.email || 'N/A'})</option>`;
         });
     } catch (error) {
         console.error('Error al cargar clientes:', error);
@@ -36,7 +37,8 @@ async function cargarDatosIniciales() {
     // 2. Cargar Productos
     const selectProducto = document.getElementById('productoSeleccionado');
     try {
-        const resProductos = await fetch(API_PRODUCTO);
+        // Obtenemos todos los productos (pueden ser activos o inactivos, dependiendo de cómo quieras vender)
+        const resProductos = await fetch(API_PRODUCTO); 
         productosDisponibles = await resProductos.json();
         
         selectProducto.innerHTML = '<option value="">-- Seleccionar producto --</option>';
@@ -63,7 +65,7 @@ function agregarProductoAlCarrito(e) {
 
     if (!productoData) return alert("Producto no encontrado.");
     
-    // El precio se toma del productoData, NO del input (seguridad)
+    // El precio se toma del productoData
     const precioUnitario = productoData.precio;
     const subtotal = precioUnitario * cantidad;
 
@@ -112,7 +114,7 @@ function renderizarCarrito() {
                     <td>$${item.precioUnitario.toFixed(2)}</td>
                     <td>${item.cantidad}</td>
                     <td>$${item.subtotal.toFixed(2)}</td>
-                    <td><button onclick="quitarProductoDelCarrito(${item.productoId})">🗑️</button></td>
+                    <td><button type="button" onclick="quitarProductoDelCarrito(${item.productoId})">🗑️</button></td>
                 </tr>`;
             tabla.innerHTML += fila;
         });
@@ -134,16 +136,16 @@ async function registrarCompra(e) {
         return alert("Debe seleccionar un cliente y añadir al menos un producto.");
     }
 
-    // Mapear el carrito al formato esperado por el controlador (clienteId + array de productos)
+    // Mapear el carrito al formato esperado por el controlador
     const productosPayload = carrito.map(item => ({
         productoId: item.productoId,
         cantidad: item.cantidad,
-        precioUnitario: item.precioUnitario // Usamos el precio del carrito
+        precioUnitario: item.precioUnitario 
     }));
 
     const payload = {
         clienteId: clienteId,
-        productos: productosPayload // El controlador calculará el TOTAL a partir de esto
+        productos: productosPayload
     };
 
     try {
@@ -200,7 +202,7 @@ async function listarCompras() {
                     <td>$${c.total.toFixed(2)}</td>
                     <td>${fechaFormateada}</td>
                     <td>
-                        <button onclick="alert('Ver detalle de compra ID ${c.id}')">Ver Detalle</button>
+                        <button type="button" onclick="verDetalleCompra(${c.id})">Ver Detalle</button> 
                     </td>
                 </tr>`;
             tabla.innerHTML += fila;
@@ -208,5 +210,41 @@ async function listarCompras() {
     } catch (error) {
         console.error('Error al listar compras:', error);
         alert('Hubo un error al cargar el historial de compras: ' + error.message);
+    }
+}
+
+// --- Ver Detalle de Compra (Llama a /compras/:id) ---
+
+async function verDetalleCompra(compraId) {
+    try {
+        const res = await fetch(`${API_COMPRA}/${compraId}`);
+        
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || `No se pudo obtener el detalle de la compra ID ${compraId}.`);
+        }
+
+        const compra = await res.json();
+
+        // 1. Cabecera
+        const clienteNombre = compra.Cliente ? compra.Cliente.nombre : 'Desconocido';
+        const fecha = new Date(compra.createdAt).toLocaleDateString();
+        
+        let mensajeDetalle = `
+        ----------------------------------
+        DETALLE DE COMPRA (ID: ${compra.id})
+        ----------------------------------
+        Cliente: ${clienteNombre}
+        Fecha: ${fecha}
+        Total: $${compra.total.toFixed(2)}
+        
+        `;
+
+        
+        alert(mensajeDetalle);
+
+    } catch (error) {
+        console.error('Error al ver detalle de compra:', error);
+        alert('❌ Error al ver detalle: ' + error.message);
     }
 }

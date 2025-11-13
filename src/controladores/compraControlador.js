@@ -28,7 +28,41 @@ module.exports = {
             res.status(400).json({ error: error.message });
         }
     },
+    async obtenerDetalleCompra(req, res) {
+        try {
+            const compraId = req.params.id;
 
+            const compra = await Compra.findByPk(compraId, {
+                // Incluimos al Cliente
+                include: [
+                    { 
+                        model: Cliente, 
+                        attributes: ['nombre'] 
+                    },
+                    // 🔑 CLAVE: Usamos el modelo COMPRAPRODUCTO, que es la tabla de detalles real
+                    {
+                        model: CompraProducto, 
+                        // Incluimos el Producto dentro de CompraProducto (para el nombre del producto)
+                        include: [
+                            { 
+                                model: Producto, 
+                                attributes: ['nombre'] 
+                            }
+                        ]
+                    }
+                ]
+            });
+
+            if (!compra) {
+                return res.status(404).json({ error: 'Compra no encontrada.' });
+            }
+
+            res.json(compra);
+        } catch (error) {
+            console.error('Error al obtener detalle de compra:', error);
+            res.status(500).json({ error: 'Error interno al obtener el detalle de la compra.' });
+        }
+    },
     async obtenerCompras(req, res) {
         try {
             const compras = await Compra.findAll({
