@@ -4,16 +4,20 @@ module.exports = {
     async crearCompra(req, res) {
         try {
             const { clienteId, productos } = req.body;
+            
             if (!productos || !Array.isArray(productos) || productos.length === 0) {
                 return res.status(400).json({ error: 'Debe incluir una lista de productos' });
             }
 
-            // Calcular total
+            // 1. Calcular total
             const total = productos.reduce((sum, p) => sum + (p.precioUnitario * p.cantidad), 0);
+            
+            // 2. Crear la cabecera de la compra
             const compra = await Compra.create({ clienteId, total });
 
-            // Crear relaciones en CompraProducto
+            // 3. Crear detalles en CompraProducto y ACTUALIZAR STOCK
             for (const p of productos) {
+                // Registrar el detalle
                 await CompraProducto.create({
                     compraId: compra.id,
                     productoId: p.productoId,
@@ -21,13 +25,34 @@ module.exports = {
                     precioUnitario: p.precioUnitario,
                     subtotal: p.cantidad * p.precioUnitario
                 });
+
+                // 🔑 CLAVE: Descontar el stock
+                const producto = await Producto.findByPk(p.productoId);
+                
+                if (producto) {
+                    const nuevaCantidad = producto.stock - p.cantidad;
+                    
+                    // Opcional: Validación de stock
+                    if (nuevaCantidad < 0) {
+                        // En un sistema real, aquí se revertiría toda la transacción.
+                        // Para este ejemplo, lanzamos un error claro.
+                        throw new Error(`Stock insuficiente para el producto: ${producto.nombre}.`);
+                    }
+
+                    // Actualizar el stock en la base de datos
+                    await producto.update({ stock: nuevaCantidad });
+                }
             }
 
             res.status(201).json({ mensaje: 'Compra registrada', compra });
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            console.error('Error al crear compra:', error);
+            // Devolvemos el error con código 400 o 500 si es un fallo interno
+            res.status(400).json({ error: error.message || 'Error interno al registrar la compra.' });
         }
     },
+    
+    // --- FUNCIÓN PARA VER DETALLE (Corregida) ---
     async obtenerDetalleCompra(req, res) {
         try {
             const compraId = req.params.id;
@@ -39,10 +64,10 @@ module.exports = {
                         model: Cliente, 
                         attributes: ['nombre'] 
                     },
-                    // 🔑 CLAVE: Usamos el modelo COMPRAPRODUCTO, que es la tabla de detalles real
+                    // Usamos el modelo COMPRAPRODUCTO (tabla de detalles)
                     {
                         model: CompraProducto, 
-                        // Incluimos el Producto dentro de CompraProducto (para el nombre del producto)
+                        // Incluimos el Producto asociado
                         include: [
                             { 
                                 model: Producto, 
@@ -63,12 +88,14 @@ module.exports = {
             res.status(500).json({ error: 'Error interno al obtener el detalle de la compra.' });
         }
     },
+    
+    // --- FUNCIÓN PARA LISTAR COMPRAS ---
     async obtenerCompras(req, res) {
         try {
             const compras = await Compra.findAll({
                 include: [
                     { model: Cliente },
-                    { model: Producto }
+                    // Nota: Si solo quieres la lista, no necesitas incluir { model: Producto } aquí
                 ]
             });
             res.json(compras);
@@ -77,12 +104,14 @@ module.exports = {
         }
     },
 
+    // --- FUNCIÓN PARA OBTENER COMPRA POR ID (Si la usas, es redundante con obtenerDetalleCompra) ---
     async obtenerCompraPorId(req, res) {
         try {
             const compra = await Compra.findByPk(req.params.id, {
                 include: [
                     { model: Cliente },
-                    { model: Producto }
+                    { model: Producto } 
+                    // Si esta ruta se llama /compras/:id, debería ser igual a obtenerDetalleCompra
                 ]
             });
             if (!compra) return res.status(404).json({ error: 'Compra no encontrada' });

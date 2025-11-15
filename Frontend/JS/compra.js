@@ -26,7 +26,6 @@ async function cargarDatosIniciales() {
         
         selectCliente.innerHTML = '<option value="">-- Seleccionar cliente --</option>';
         clientes.forEach(c => {
-            // Asumiendo que el cliente tiene un campo 'email'
             selectCliente.innerHTML += `<option value="${c.id}">${c.nombre} (${c.email || 'N/A'})</option>`;
         });
     } catch (error) {
@@ -34,16 +33,17 @@ async function cargarDatosIniciales() {
         selectCliente.innerHTML = '<option value="">Error al cargar clientes</option>';
     }
 
-    // 2. Cargar Productos
+    // 2. Cargar Productos y Stock (Actualizado para reflejar stock)
     const selectProducto = document.getElementById('productoSeleccionado');
     try {
-        // Obtenemos todos los productos (pueden ser activos o inactivos, dependiendo de cómo quieras vender)
         const resProductos = await fetch(API_PRODUCTO); 
         productosDisponibles = await resProductos.json();
         
         selectProducto.innerHTML = '<option value="">-- Seleccionar producto --</option>';
         productosDisponibles.forEach(p => {
-            selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} ($${p.precio.toFixed(2)})</option>`;
+            // Se muestra el stock en el dropdown para referencia rápida
+            const stockInfo = p.stock !== undefined ? ` (Stock: ${p.stock})` : '';
+            selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} ($${p.precio.toFixed(2)})${stockInfo}</option>`;
         });
     } catch (error) {
         console.error('Error al cargar productos:', error);
@@ -65,16 +65,26 @@ function agregarProductoAlCarrito(e) {
 
     if (!productoData) return alert("Producto no encontrado.");
     
-    // El precio se toma del productoData
     const precioUnitario = productoData.precio;
     const subtotal = precioUnitario * cantidad;
 
     const itemExistenteIndex = carrito.findIndex(item => item.productoId === productoId);
+    let cantidadTotal = cantidad;
 
     if (itemExistenteIndex > -1) {
-        // Si ya existe, actualiza la cantidad
-        carrito[itemExistenteIndex].cantidad += cantidad;
-        carrito[itemExistenteIndex].subtotal += subtotal;
+        // Calcula la nueva cantidad total si el ítem ya existe
+        cantidadTotal += carrito[itemExistenteIndex].cantidad;
+    }
+    
+    // 🔑 CLAVE: Validación simple de stock antes de añadir al carrito
+    if (productoData.stock !== undefined && cantidadTotal > productoData.stock) {
+        return alert(`Stock insuficiente. Solo quedan ${productoData.stock} unidades de ${productoData.nombre}.`);
+    }
+
+    if (itemExistenteIndex > -1) {
+        // Actualiza el existente
+        carrito[itemExistenteIndex].cantidad = cantidadTotal;
+        carrito[itemExistenteIndex].subtotal = cantidadTotal * precioUnitario;
     } else {
         // Si es nuevo, añade el ítem al carrito
         carrito.push({
@@ -136,7 +146,6 @@ async function registrarCompra(e) {
         return alert("Debe seleccionar un cliente y añadir al menos un producto.");
     }
 
-    // Mapear el carrito al formato esperado por el controlador
     const productosPayload = carrito.map(item => ({
         productoId: item.productoId,
         cantidad: item.cantidad,
@@ -162,7 +171,9 @@ async function registrarCompra(e) {
             carrito = []; // Vaciar carrito
             renderizarCarrito();
             listarCompras(); // Actualizar el historial
+            cargarDatosIniciales(); // 🔑 CLAVE: Recargar productos para actualizar el stock en el frontend
         } else {
+            // Muestra errores del backend, incluyendo "Stock insuficiente"
             throw new Error(data.error || 'Error desconocido al registrar la compra.');
         }
     } catch (error) {
@@ -178,7 +189,6 @@ async function listarCompras() {
         const tabla = document.getElementById('tablaComprasHistorial');
         tabla.innerHTML = '<tr><td colspan="5">Cargando historial...</td></tr>';
         
-        // El controlador de compras incluye el objeto Cliente
         const res = await fetch(API_COMPRA); 
         if (!res.ok) throw new Error('Error al listar compras.');
 
@@ -191,7 +201,6 @@ async function listarCompras() {
         }
 
         data.forEach(c => {
-            // Accedemos a la propiedad anidada: c.Cliente.nombre
             const nombreCliente = c.Cliente ? c.Cliente.nombre : 'Cliente Desconocido';
             const fechaFormateada = new Date(c.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
@@ -238,8 +247,8 @@ async function verDetalleCompra(compraId) {
         Fecha: ${fecha}
         Total: $${compra.total.toFixed(2)}
         
+        
         `;
-
         
         alert(mensajeDetalle);
 
