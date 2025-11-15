@@ -1,13 +1,9 @@
-// Asegúrate de tener la instancia de Sequelize disponible.
-// Si no la tienes disponible globalmente, debes importarla.
-// Asumo que tu baseDatos.js devuelve la conexión. Aquí la importamos como paquete:
-const sequelize = require('sequelize'); 
-
 const { Compra, Producto, Cliente, Proveedor, CompraProducto } = require('../baseDatos');
 const { Op } = require('sequelize');
+const sequelize = require('sequelize'); 
 
 module.exports = {
-  async ventasPorFecha(req, res) {
+    async ventasPorFecha(req, res) {
     try {
       const { fechaInicio, fechaFin } = req.query;
             
@@ -26,19 +22,51 @@ module.exports = {
     }
   },
 
+    async productosMasVendidos(req, res) {
+        try {
+            const productosVendidos = await CompraProducto.findAll({
+                attributes: [
+                    // Sumamos la cantidad de todos los CompraProducto
+                    [sequelize.fn('SUM', sequelize.col('cantidad')), 'totalUnidadesVendidas']
+                ],
+                // Agrupamos por producto para sumar sus ventas individuales
+                group: ['productoId', 'Producto.id', 'Producto.nombre'], 
+                include: [
+                    {
+                        model: Producto, 
+                        attributes: ['nombre'] 
+                    }
+                ],
+                order: [
+                    [sequelize.col('totalUnidadesVendidas'), 'DESC'] 
+                ],
+                limit: 10
+            });
 
-  async proveedoresConMasProductos(req, res) {
-    try {
-      // Esta consulta ya es eficiente, solo pide los proveedores e incluye sus productos
-      const proveedores = await Proveedor.findAll({
-        include: [{ model: Producto }],
-                // Ordenar por la cantidad de productos en el frontend es más limpio
-        order: [['nombre', 'ASC']] // Ordenamos por nombre para consistencia
-      });
-      res.json(proveedores);
-    } catch (error) {
-      console.error('Error en proveedoresConMasProductos:', error);
-      res.status(500).json({ error: error.message });
+            const reporte = productosVendidos.map(item => ({
+                producto: item.Producto.nombre,
+                totalUnidadesVendidas: item.get('totalUnidadesVendidas')
+            }));
+
+            res.json(reporte);
+
+        } catch (error) {
+            console.error('Error en productosMasVendidos:', error);
+            res.status(500).json({ error: 'Error al obtener el reporte de más vendidos.' });
+        }
+    },
+
+    async proveedoresConMasProductos(req, res) {
+        try {
+            // Este reporte muestra proveedores con mayor inventario (productos registrados)
+            const proveedores = await Proveedor.findAll({
+                include: [{ model: Producto }],
+                order: [['nombre', 'ASC']]
+            });
+            res.json(proveedores);
+        } catch (error) {
+            console.error('Error en proveedoresConMasProductos:', error);
+            res.status(500).json({ error: error.message });
+        }
     }
-  }
 };
