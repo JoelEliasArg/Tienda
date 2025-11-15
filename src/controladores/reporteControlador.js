@@ -26,10 +26,8 @@ module.exports = {
         try {
             const productosVendidos = await CompraProducto.findAll({
                 attributes: [
-                    // Sumamos la cantidad de todos los CompraProducto
                     [sequelize.fn('SUM', sequelize.col('cantidad')), 'totalUnidadesVendidas']
                 ],
-                // Agrupamos por producto para sumar sus ventas individuales
                 group: ['productoId', 'Producto.id', 'Producto.nombre'], 
                 include: [
                     {
@@ -56,17 +54,23 @@ module.exports = {
         }
     },
 
+    // --- 3. Proveedores con Mayor Inventario (CORREGIDO) ---
     async proveedoresConMasProductos(req, res) {
         try {
-            // Este reporte muestra proveedores con mayor inventario (productos registrados)
+            // Hacemos una inclusión simple. El conteo se hará en el frontend.
             const proveedores = await Proveedor.findAll({
-                include: [{ model: Producto }],
+                // 🔑 CLAVE: Usamos el alias explícito 'Productos' para asegurar que Sequelize 
+                // incluya el array bajo el nombre que espera el frontend.
+                include: [{ model: Producto, as: 'Productos' }], 
                 order: [['nombre', 'ASC']]
             });
+            
+            // Enviamos los datos al frontend. El frontend se encarga de calcular p.Productos.length y ordenar.
             res.json(proveedores);
         } catch (error) {
             console.error('Error en proveedoresConMasProductos:', error);
-            res.status(500).json({ error: error.message });
+            // Si hay error, probablemente sea por la asociación
+            res.status(500).json({ error: 'Fallo la consulta. Verifica Proveedor.hasMany(Producto, {as: "Productos"}) en tus modelos.' });
         }
     }
 };

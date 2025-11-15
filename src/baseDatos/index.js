@@ -7,7 +7,7 @@ const defineProducto = require('../modelos/producto');
 const defineProveedor = require('../modelos/proveedor');
 const defineCompra = require('../modelos/compra');
 const defineReporte = require('../modelos/reporte');
-const defineCompraProducto = require('../modelos/compraProducto'); // Tabla intermedia
+const defineCompraProducto = require('../modelos/compraProducto'); 
 
 // --- 2. Configuración de la Conexión ---
 const sequelize = new Sequelize(
